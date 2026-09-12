@@ -12,7 +12,7 @@ A clean, modern, and responsive **Login Page** featuring an animated **Preloader
 ##  Live Demo
 Experience the project live in your browser: [View Live Demo](https://bennymusonda.github.io/login-page/)
 
-## 🛠️ Technologies Used
+##  Technologies Used
 *   **HTML5:** Component structures for both the login portal and the post-auth dashboard views.
 *   **CSS3:** Flexbox layouts, media queries for full responsiveness, and smooth transitional animations.
 *   **JavaScript (ES6):** Logic handling the preloader lifecycle, page transitions, and authentication flows.
