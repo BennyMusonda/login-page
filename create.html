@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="styles.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css" integrity="sha512-x9WwyMYBnlXMNQ6kQ/Lyzu1NqIhLQKL5Oq6xByfXuRj7s9CskyCbLv/1IjqzJmXwFXWr0ov6jBV7Qbc0hh9nHg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+</head>
+<body>
+    <form action="/register" method="POST">
+        <div class="main">
+         <div class="form-content">
+            <div class="login-profile"><i class="fa-regular fa-user"></i></div>
+            <div class="form-title">CREATE ACCOUNT</div>
+            <div class="form-username">Username<input type="text" name="username" pattern="[A-Za-z]+" title="must have letters only" required placeholder="Username"></div>
+            <div class="form-password">Password<input type="password" name="password" pattern="(?=.*[A-Z]).{6,}" title="Must be at least 6 characters long and contain at least one uppercase letter" max-length="6" required placeholder="Password"></div>
+            <div class="form-password">Comfirm Password<input type="password" name="password" pattern="(?=.*[A-Z]).{6,}" title="Must be at least 6 characters long and contain at least one uppercase letter" max-length="6" required placeholder="Comfirm Password"></div>
+            <button class="form-button" type="submit"><a>Create Account</a></button>
+            <div class="create-account"> or <a href="index.html">Log In</a></div>
+         </div>
+        </div>
+    </form>
+</body>
+</html>
