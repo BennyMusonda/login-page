@@ -1,57 +1,77 @@
 const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
+const PORT = 3000;
 
-// Middleware to parse form data
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware to parse incoming HTML form submissions
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Serve static HTML files from the "public" folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve your CSS and frontend JS files from your project folder
+app.use(express.static(__dirname));
 
-// Connect to MySQL Workbench database
+// 1. Connect to your MySQL Workbench database instance (Port 3306)
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: '@_Delta123', // Replace with your actual MySQL password
-    database: 'user_system'
+    user: 'root',      
+    password: '@Delta123',
+    database: 'user_db' 
 });
 
 db.connect((err) => {
     if (err) {
-        console.error('Error connecting to MySQL:', err);
+        console.error('Database connection failed:', err.message);
         return;
     }
-    console.log('Connected to MySQL Workbench database.');
+    console.log('Successfully connected to MySQL Workbench database.');
 });
 
-// Handle registration form submission
+// 2. Automatically load create.html as your homepage
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'create.html'));
+});
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// 3. Handle Registration Form Submission (matching action="/register")
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        // Hash the password securely before saving
-        const hashedPassword = await bcrypt.hash(password, 10);
+    if (!email || !password) {
+        return res.status(400).send('Please provide both an email and a password.');
+    }
 
+    try {
+        // Securely hash the password using bcrypt
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Insert the credentials into the MySQL database safely
         const sql = 'INSERT INTO users (email, password) VALUES (?, ?)';
+        
         db.query(sql, [email, hashedPassword], (err, result) => {
             if (err) {
+                // Handle duplicate email error safely
                 if (err.code === 'ER_DUP_ENTRY') {
-                    return res.send('Email already registered.');
+                    return res.status(400).send('An account with this email already exists.');
                 }
-                return res.status(500).send('Database error occurred.');
+                console.error(err);
+                return res.status(500).send('Error saving user data to the database.');
             }
-            res.send('Account created successfully! You can now log in.');
+            res.send('Account successfully registered!');
         });
-    } catch {
-        res.status(500).send('Server error processing registration.');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server processing error.');
     }
 });
 
-// Start the server
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+// Start your local server
+app.listen(PORT, () => {
+    console.log(`Server running smoothly at http://localhost:${PORT}`);
 });
